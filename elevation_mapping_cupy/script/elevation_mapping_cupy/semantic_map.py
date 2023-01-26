@@ -50,12 +50,12 @@ class SemanticMap:
 
         self.amount_layer_names = len(self.layer_names)
 
-        self.semantic_map = xp.zeros(
-            (self.amount_layer_names, self.param.cell_n, self.param.cell_n),
+        self.semantic_map = xp.full(
+            (self.amount_layer_names, self.param.cell_n, self.param.cell_n), cp.nan,
             dtype=param.data_type,
         )
-        self.new_map = xp.zeros(
-            (self.amount_layer_names, self.param.cell_n, self.param.cell_n),
+        self.new_map = xp.full(
+            (self.amount_layer_names, self.param.cell_n, self.param.cell_n), cp.nan,
             param.data_type,
         )
         # which layers should be reset to zero at each update, per default everyone,
@@ -63,7 +63,7 @@ class SemanticMap:
         self.delete_new_layers = cp.ones(self.new_map.shape[0], cp.bool8)
 
     def clear(self):
-        self.semantic_map *= 0.0
+        self.semantic_map[:,:,:] = cp.nan
 
     def compile_kernels(self) -> None:
         """
@@ -193,12 +193,12 @@ class SemanticMap:
 
     def shift_map_xy(self, shift_value):
         self.semantic_map = cp.roll(self.semantic_map, shift_value, axis=(1, 2))
-        self.pad_value(self.semantic_map, shift_value, value=0.0)
+        self.pad_value(self.semantic_map, shift_value, value=cp.nan)
         self.new_map = cp.roll(self.new_map, shift_value, axis=(1, 2))
-        self.pad_value(self.new_map, shift_value, value=0.0)
+        self.pad_value(self.new_map, shift_value, value=cp.nan)
         for el in self.elements_to_shift.values():
             el = cp.roll(el, shift_value, axis=(1, 2))
-            self.pad_value(el, shift_value, value=0.0)
+            self.pad_value(el, shift_value, value=cp.nan)
 
     def get_fusion_of_pcl(self, channels: List[str]) -> List[str]:
         """Get all fusion algorithms that need to be applied to a specific pointcloud
@@ -248,7 +248,7 @@ class SemanticMap:
 
     def update_layers_pointcloud(self, points_all, channels, R, t, elevation_map):
         additional_fusion = self.get_fusion_of_pcl(channels)
-        self.new_map[self.delete_new_layers] = 0.0
+        self.new_map[self.delete_new_layers] = cp.nan
         if "average" in additional_fusion:
             pcl_ids, layer_ids = self.get_indices_fusion(channels, "average")
             self.sum_kernel(
@@ -425,7 +425,7 @@ class SemanticMap:
         image_width: cp._core.core.ndarray,
     ):
 
-        self.new_map *= 0
+        self.new_map[:,:,:] = cp.nan
         config = self.param.subscriber_cfg[sub_key]
 
         for j, (fusion, channel) in enumerate(zip(config["fusion"], config["channels"])):
