@@ -39,23 +39,23 @@ robot_centric_elevation:                                  # Use the same name as
     threshold: 1.1
     use_threshold: True
 
-semantic_filter:
-  type: "semantic_filter"
-  enable: False
-  fill_nan: False
-  is_height_layer: False
-  layer_name: "sem_fil"
-  extra_params:
-    classes: ['grass','tree','fence','dirt']
+# semantic_filter:
+#   type: "semantic_filter"
+#   enable: False
+#   fill_nan: False
+#   is_height_layer: False
+#   layer_name: "sem_fil"
+#   extra_params:
+#     classes: ['grass','tree','fence','dirt']
 
-semantic_traversability:
-  type: "semantic_traversability"
-  enable: False
-  fill_nan: False
-  is_height_layer: False
-  layer_name: "sem_traversability"
-  extra_params:
-    layers: ['traversability','robot_centric_elevation']
-    thresholds: [0.3,0.5]
-    type: ['traversability', 'elevation']
+# semantic_traversability:
+#   type: "semantic_traversability"
+#   enable: False
+#   fill_nan: False
+#   is_height_layer: False
+#   layer_name: "sem_traversability"
+#   extra_params:
+#     layers: ['traversability','robot_centric_elevation']
+#     thresholds: [0.3,0.5]
+#     type: ['traversability', 'elevation']
 

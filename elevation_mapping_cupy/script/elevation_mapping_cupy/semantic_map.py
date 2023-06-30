@@ -15,9 +15,9 @@ from elevation_mapping_cupy.kernels import (
     sum_kernel,
 )
 from elevation_mapping_cupy.kernels import (
-    average_correspondences_to_map_kernel,
     exponential_correspondences_to_map_kernel,
     color_correspondences_to_map_kernel,
+    class_latest_correspondences_to_map_kernel
 )
 
 xp = cp
@@ -154,6 +154,13 @@ class SemanticMap:
                 width=self.param.cell_n,
                 height=self.param.cell_n,
                 alpha=0.7
+            )
+            
+        if "image_class_latest" in self.unique_fusion:
+            self.class_latest_correspondences_to_map_kernel = class_latest_correspondences_to_map_kernel(
+                resolution=self.param.resolution,
+                width=self.param.cell_n,
+                height=self.param.cell_n,
             )
 
         if "image_color" in self.unique_fusion:
@@ -445,6 +452,20 @@ class SemanticMap:
                 )
                 self.semantic_map[sem_map_idx] = self.new_map[sem_map_idx]
 
+            elif fusion == "image_class_latest":
+                self.class_latest_correspondences_to_map_kernel(
+                    self.semantic_map,
+                    cp.uint64(sem_map_idx),
+                    image[j],
+                    uv_correspondence,
+                    valid_correspondence,
+                    image_height,
+                    image_width,
+                    self.new_map,
+                    size=int(self.param.cell_n * self.param.cell_n),
+                )
+                self.semantic_map[sem_map_idx] = self.new_map[sem_map_idx]
+
             elif fusion == "image_color":
                 self.color_correspondences_to_map_kernel(
                     self.semantic_map,
@@ -457,7 +478,9 @@ class SemanticMap:
                     self.new_map,
                     size=int(self.param.cell_n * self.param.cell_n),
                 )
+                
                 self.semantic_map[sem_map_idx] = self.new_map[sem_map_idx]
+
 
             else:
                 raise ValueError("Fusion for image is unknown.")
