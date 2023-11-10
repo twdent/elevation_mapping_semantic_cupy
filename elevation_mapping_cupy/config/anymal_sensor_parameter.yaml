@@ -1,42 +1,6 @@
 #### Subscribers ########
 subscribers:
-  # debug_rgb:
-  #   fusion: ['image_color']
-  #   topic_name_camera: /zed2i/zed_node/left/image_rect_color
-  #   topic_name_camera_info: /zed2i/zed_node/right/camera_info
-  #   channels: ["rgb_image"]    
-  #   data_type: image
-  #   fusion_types:
-  #     array_fusion: []
-  #     channels: []
-
-  # debug_rgb_3_seperate:
-  #   fusion: ['image_exponential','image_exponential','image_exponential']
-  #   topic_name_camera: /zed2i/zed_node/right/image
-  #   topic_name_camera_info: /zed2i/zed_node/right/camera_info
-  #   channels: ["r_channel", "g_channel", "b_channel"]    
-  #   data_type: image
-  
-  # debug_rgb_2_seperate:
-  #   fusion: ['image_exponential', 'image_exponential']
-  #   topic_name_camera: /zed2i/zed_node/left/image_rect_color
-  #   topic_name_camera_info: /zed2i/zed_node/right/camera_info
-  #   channels: ["r_channel", "g_channel"]    
-  #   data_type: image
-
-  # debug_mono_exponential:
-  #   fusion: ['image_exponential']
-  #   topic_name_camera: /debug_image
-  #   topic_name_camera_info: /zed2i/zed_node/right/camera_info
-  #   channels: ["single_channel_semantic"]    
-  #   data_type: image
-    
-  # front_cam:
-  #   channels: ['rgb']
-  #   fusion: ['color']
-  #   topic_name: '/elevation_mapping/pointcloud_semantic'
-  #   data_type: pointcloud
-  
+  # RGB cameras
   # alphasense_front_rgb:
   #   fusion: ['image_color']
   #   topic_name_camera: /alphasense_driver_ros/cam4/debayered
@@ -58,68 +22,102 @@ subscribers:
   #   channels: ["rgb_image"]
   #   data_type: image
 
-  semantic_class:
-    fusion: ['image_class_latest']
-    topic_name_camera: '/semantic_segmentation/one_hot_encoded' # ''
-    topic_name_camera_info: '/wide_angle_camera_front/camera_info'
-    channels: ["semantic_class"]
+  wide_angle_camera_rear:
+    fusion: ['image_color']
+    topic_name_camera: /wide_angle_camera_rear/image_color_rect/compressed
+    topic_name_camera_info: /wide_angle_camera_rear/camera_info
+    channels: ["rgb_image"]
     data_type: image
 
-  # wvn_prediction:
+  wide_angle_camera_front:
+    fusion: ['image_color']
+    topic_name_camera: /wide_angle_camera_front/image_color_rect/compressed
+    topic_name_camera_info: /wide_angle_camera_front/camera_info
+    channels: ["rgb_image"]
+    data_type: image
+  
+  v4l2_camera:
+    fusion: ['image_color']
+    topic_name_camera: /v4l2_camera/image_raw_throttle/compressed
+    topic_name_camera_info: /v4l2_camera/camera_info_throttle
+    channels: ["rgb_image"]
+    data_type: image
+
+  traversable_segmentation:
+    fusion: ['image_color']
+    topic_name_camera: /traversable_segmentation/segmentation
+    topic_name_camera_info: /traversable_segmentation/camera_info
+    channels: ["sem_image"]
+    data_type: image
+
+  # Traversability
+  # wvn_front_traversability:
   #   fusion: ['image_exponential']
-  #   topic_name_camera: '/wild_visual_navigation_node/traversability_raw'
-  #   topic_name_camera_info: '/wild_visual_navigation_node/camera_info'
+  #   topic_name_camera: '/wild_visual_navigation_node/front/traversability'
+  #   topic_name_camera_info: '/wild_visual_navigation_node/front/camera_info'
   #   channels: ["visual_traversability"]
   #   data_type: image
   
-  # front_cam:
-  #   channels: ['rgb','feat_0','feat_1','grass','tree','fence','person']
-  #   fusion: ['color','average','average','class_average','class_average','class_average','class_average']
-  #   topic_name: '/elvation_mapping/pointcloud_semantic'
-  #   semantic_segmentation: False
-  #   segmentation_model: 'detectron_coco_panoptic_fpn_R_101_3x'
-  #   feature_config:
-  #     name: 'DINO'
-  #     interpolation: 'bilinear'
-  #     model: "vit_small"
-  #     patch_size:  16
-  #     dim: 5
-  #     dropout: False
-  #     dino_feat_type: "feat"
-  #     input_size: [80, 160]
-  #     projection_type: "nonlinear"
-
-  #   cam_info_topic: "/camera/depth/camera_info"
-  #   image_topic: "/camera/rgb/image_raw"
-  #   depth_topic: "/camera/depth/image_raw"
-  #   cam_frame: camera_rgb_optical_frame
-  #   confidence: False
-  #   confidence_topic: "/camera/depth/image_raw"
-  #   confidence_threshold: 10
-  #   feature_extractor: False
-    
-  front_bpearl:
-    channels: []
-    fusion: []
-    topic_name: /robot_self_filter/bpearl_front/point_cloud
-    data_type: pointcloud
-
-  rear_bpearl:
-    channels: []
-    fusion: []
-    topic_name: /robot_self_filter/bpearl_rear/point_cloud
-    data_type: pointcloud
+  # wvn_left_traversability:
+  #   fusion: ['image_exponential']
+  #   topic_name_camera: '/wild_visual_navigation_node/left/traversability'
+  #   topic_name_camera_info: '/wild_visual_navigation_node/left/camera_info'
+  #   channels: ["visual_traversability"]
+  #   data_type: image
   
+  # wvn_right_traversability:
+  #   fusion: ['image_exponential']
+  #   topic_name_camera: '/wild_visual_navigation_node/right/traversability'
+  #   topic_name_camera_info: '/wild_visual_navigation_node/right/camera_info'
+  #   channels: ["visual_traversability"]
+  #   data_type: image
+  
+  # Confidence
+  # wvn_front_confidence:
+  #   fusion: ['image_exponential']
+  #   topic_name_camera: '/wild_visual_navigation_node/front/confidence'
+  #   topic_name_camera_info: '/wild_visual_navigation_node/front/camera_info'
+  #   channels: ["visual_confidence"]
+  #   data_type: image
+  
+  # wvn_left_confidence:
+  #   fusion: ['image_exponential']
+  #   topic_name_camera: '/wild_visual_navigation_node/left/confidence'
+  #   topic_name_camera_info: '/wild_visual_navigation_node/left/camera_info'
+  #   channels: ["visual_confidence"]
+  #   data_type: image
+  
+  # wvn_right_confidence:
+  #   fusion: ['image_exponential']
+  #   topic_name_camera: '/wild_visual_navigation_node/right/confidence_raw'
+  #   topic_name_camera_info: '/wild_visual_navigation_node/right/camera_info'
+  #   channels: ["visual_confidence"]
+  #   data_type: image
+
+  # For Anymal C
+#  front_depth:
+#    channels: []
+#    fusion: []
+#    topic_name: /depth_camera_front/point_cloud_self_filtered
+#    data_type: pointcloud
+#
+#  rear_depth:
+#    channels: []
+#    fusion: []
+#    topic_name: /depth_camera_rear/point_cloud_self_filtered
+#    data_type: pointcloud
+
+  # For Anymal D
   front_depth:
-    channels: []
-    fusion: []
-    topic_name: /depth_camera_front/point_cloud_self_filtered
+    channels: [ ]
+    fusion: [ ]
+    topic_name: /depth_camera_front_upper/point_cloud_self_filtered
     data_type: pointcloud
 
   rear_depth:
-    channels: []
-    fusion: []
-    topic_name: /depth_camera_rear/point_cloud_self_filtered
+    channels: [ ]
+    fusion: [ ]
+    topic_name: /depth_camera_rear_upper/point_cloud_self_filtered
     data_type: pointcloud
 
   left_depth:
@@ -134,8 +132,37 @@ subscribers:
     topic_name: /depth_camera_right/point_cloud_self_filtered
     data_type: pointcloud
   
-  velodyne:
+
+  # velodyne:
+  #   channels: []
+  #   fusion: []
+  #   topic_name: /point_cloud_filter/lidar/point_cloud_filtered
+  #   data_type: pointcloud
+
+
+  # Cerberus
+  # front_bpearl:
+  #   channels: []
+  #   fusion: []
+  #   topic_name: /robot_self_filter/bpearl_front/point_cloud
+  #   data_type: pointcloud
+
+  # rear_bpearl:
+  #   channels: []
+  #   fusion: []
+  #   topic_name: /robot_self_filter/bpearl_rear/point_cloud
+  #   data_type: pointcloud
+  
+
+  # Cameras for D
+  front_depth_d:
     channels: []
     fusion: []
-    topic_name: /point_cloud_filter/lidar/point_cloud_filtered
+    topic_name: /depth_camera_front_upper/point_cloud_self_filtered
+    data_type: pointcloud
+
+  rear_depth_d:
+    channels: []
+    fusion: []
+    topic_name: /depth_camera_rear_upper/point_cloud_self_filtered
     data_type: pointcloud

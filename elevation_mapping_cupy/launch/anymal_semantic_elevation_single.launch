@@ -1,4 +1,6 @@
 <launch>
+<env name="PYTHONPATH" value="/lib/python3/dist-packages:$(env PYTHONPATH):/home/twdenton/.local/lib/python3.8/site-packages" />
+
     <arg name="use_sim_time" default="true" />
     <arg name="rviz" default="false"/>
     <!-- Give the robot description parameter a name -->

@@ -40,7 +40,7 @@ class ElevationMapWrapper:
         rospack = rospkg.RosPack()
         self.root = rospack.get_path("elevation_mapping_cupy")
         weight_file = os.path.join(self.root, "config/weights.dat")
-        plugin_config_file = os.path.join(self.root, "config/plugin_config.yaml")
+        plugin_config_file = os.path.join(self.root, "config/anymal_plugin_config.yaml")
         self.param = Parameter(use_chainer=False, weight_file=weight_file, plugin_config_file=plugin_config_file)
 
         self.node_name = "elevation_mapping"

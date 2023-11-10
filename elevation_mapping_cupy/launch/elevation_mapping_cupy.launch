@@ -1,4 +1,5 @@
 <launch>
+<env name="PYTHONPATH" value="/lib/python3/dist-packages:$(env PYTHONPATH):/home/twdenton/.local/lib/python3.8/site-packages" />
   <!-- Elevation mapping node -->
   <node pkg="elevation_mapping_cupy" type="elevation_mapping_node" name="elevation_mapping" output="screen">
     <rosparam command="load" file="$(find elevation_mapping_cupy)/config/parameters.yaml" />

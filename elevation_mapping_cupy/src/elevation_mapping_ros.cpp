@@ -107,7 +107,9 @@ ElevationMappingNode::ElevationMappingNode(ros::NodeHandle& nh)
       } else {
         transport_hint = "raw"; // In the default case we assume raw topic
       }
-
+      //print the type, topic and hint
+      ROS_INFO_STREAM("Subscriber data_type [" << type << "] topic [" << camera_topic << "] transport_hint [" << transport_hint << "]");
+      
       // Setup subscriber
       const auto hint = image_transport::TransportHints(transport_hint, ros::TransportHints(), ros::NodeHandle(camera_topic));
       ImageSubscriberPtr image_sub = std::make_shared<ImageSubscriber>();
