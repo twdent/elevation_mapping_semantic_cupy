@@ -223,3 +223,41 @@ def class_latest_correspondences_to_map_kernel(resolution, width, height):
         name="class_latest_correspondences_to_map_kernel",
     )
     return class_latest_correspondences_to_map_kernel
+
+
+def class_probabilities_bayesian_correspondences_to_map_kernel(resolution, width, height):
+    '''This handles one channel of the semantic map probabilities'''
+    class_probabilities_bayesian_correspondences_to_map_kernel = cp.ElementwiseKernel(
+        in_params="raw U sem_map, raw U map_idx, raw U image_mono, raw U uv_correspondence, raw B valid_correspondence, raw U image_height, raw U image_width",
+        out_params="raw U new_sem_map",
+        preamble=string.Template(
+            """
+            __device__ int get_map_idx(int idx, int layer_n) {
+                const int layer = ${width} * ${height};
+                return layer * layer_n + idx;
+            }
+            """
+        ).substitute(width=width, height=height),
+        operation=string.Template(
+            """
+            int cell_idx = get_map_idx(i, 0);
+            if (valid_correspondence[cell_idx]){
+                int cell_idx_2 = get_map_idx(i, 1);
+                
+                int idx_class = int(uv_correspondence[cell_idx]) + int(uv_correspondence[cell_idx_2]) * image_width; 
+                
+                float p = image_mono[idx_class];
+                float q = 1-p;
+                float P = sem_map[get_map_idx(i, map_idx)];
+                float Q = 1-P;
+                
+                float new_P = (p*P)/(p*P + q*Q);
+                new_sem_map[get_map_idx(i, map_idx)] = new_P;
+            }else{
+                new_sem_map[get_map_idx(i, map_idx)] = sem_map[get_map_idx(i, map_idx)];
+            }
+            """
+        ).substitute(),
+        name="class_probabilities_bayesian_correspondences_to_map_kernel",
+    )
+    return class_probabilities_bayesian_correspondences_to_map_kernel

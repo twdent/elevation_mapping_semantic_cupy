@@ -17,7 +17,8 @@ from elevation_mapping_cupy.kernels import (
 from elevation_mapping_cupy.kernels import (
     exponential_correspondences_to_map_kernel,
     color_correspondences_to_map_kernel,
-    class_latest_correspondences_to_map_kernel
+    class_latest_correspondences_to_map_kernel,
+    class_probabilities_bayesian_correspondences_to_map_kernel
 )
 
 xp = cp
@@ -165,6 +166,13 @@ class SemanticMap:
 
         if "image_color" in self.unique_fusion:
             self.color_correspondences_to_map_kernel = color_correspondences_to_map_kernel(
+                resolution=self.param.resolution,
+                width=self.param.cell_n,
+                height=self.param.cell_n,
+            )
+
+        if "class_probabilities_bayesian" in self.unique_fusion:
+            self.class_probabilities_bayesian_correspondences_to_map_kernel = class_probabilities_bayesian_correspondences_to_map_kernel(
                 resolution=self.param.resolution,
                 width=self.param.cell_n,
                 height=self.param.cell_n,
@@ -479,6 +487,20 @@ class SemanticMap:
                     size=int(self.param.cell_n * self.param.cell_n),
                 )
                 
+                self.semantic_map[sem_map_idx] = self.new_map[sem_map_idx]
+
+            elif fusion == "class_probabilities_bayesian":
+                self.class_probabilities_bayesian_correspondences_to_map_kernel(
+                    self.semantic_map,
+                    cp.uint64(sem_map_idx),
+                    image[j],
+                    uv_correspondence,
+                    valid_correspondence,
+                    image_height,
+                    image_width,
+                    self.new_map,
+                    size=int(self.param.cell_n * self.param.cell_n),
+                )
                 self.semantic_map[sem_map_idx] = self.new_map[sem_map_idx]
 
 
