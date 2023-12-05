@@ -36,18 +36,32 @@ subscribers:
     channels: ["rgb_image"]
     data_type: image
   
-  v4l2_camera:
-    fusion: ['image_color']
-    topic_name_camera: /v4l2_camera/image_raw_throttle/compressed
-    topic_name_camera_info: /v4l2_camera/camera_info_throttle
-    channels: ["rgb_image"]
-    data_type: image
+  # v4l2_camera:
+  #   fusion: ['image_color']
+  #   topic_name_camera: /v4l2_camera/image_raw_throttle/compressed
+  #   topic_name_camera_info: /v4l2_camera/camera_info_throttle
+  #   channels: ["rgb_image"]
+  #   data_type: image
 
   traversable_segmentation:
     fusion: ['image_color']
     topic_name_camera: /traversable_segmentation/segmentation
     topic_name_camera_info: /traversable_segmentation/camera_info
     channels: ["sem_image"]
+    data_type: image
+
+  traversable_segmentation_probs:
+    fusion: ['image_exponential']
+    topic_name_camera: /traversable_segmentation/green_channel
+    topic_name_camera_info: /traversable_segmentation/camera_info
+    channels: ["class_probabilities"]
+    data_type: image
+  
+  class_probabilities_bayesian:
+    fusion: ['class_probabilities_bayesian']
+    topic_name_camera: /traversable_segmentation/class_probabilities
+    topic_name_camera_info: /traversable_segmentation/camera_info
+    channels: ["bayes_class_probabilities"]
     data_type: image
 
   # Traversability
